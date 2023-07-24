@@ -8,7 +8,7 @@ const app = fastify({ logger: false })
 
 app.get('/', async ( _, res ) => {
   const status = await client.isUserAuthorized()
-  if ( status ) {
+  if ( !status ) {
     await initialize()
   }
 
