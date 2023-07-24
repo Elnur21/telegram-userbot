@@ -1,16 +1,16 @@
 require('dotenv/config')
 
 const fastify = require("fastify");
-//const { client, initialize } = require("./src/userbot");
+const { client, initialize } = require("./src/userbot");
 
 const port = process.env.PORT
 const app = fastify({ logger: false })
 
 app.get('/', async ( _, res ) => {
-  //const status = await client.isUserAuthorized()
-  //if ( status ) {
-  //  await initialize()
-  //}
+  const status = await client.isUserAuthorized()
+  if ( status ) {
+    await initialize()
+  }
 
   res.send({
     ok: true,
