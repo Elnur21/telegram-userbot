@@ -7,21 +7,25 @@ const ping = async event => {
     message } = event
 
   let peer = message.peerId
-  let resp = 'pong'
+  let resp = 'pong!!'
 
-  await client.invoke(
-    new Api.messages.EditMessage({
-      peer,
-      id: message.id,
-      message: resp
-    })
-  )
+  let method = new Api.messages.EditMessage({
+    peer,
+    id: message.id,
+    message: resp
+  })
+
+  try {
+    await client.invoke(method)
+  } catch (err) {
+    console.error(err.message)
+  }
 }
 
 module.exports = {
   handler: ping,
   event: new NewMessage({
-    outgoing: true,
+    fromUsers: [ 'me' ],
     pattern: /^\.ping$/
   })
 }
