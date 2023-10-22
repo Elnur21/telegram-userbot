@@ -36,7 +36,7 @@ const pinOrUnpin = async event => {
     res = await client.invoke(method)
   } catch (err) {
     failed = true
-    await message.edit(err.message)
+    console.error(err.message)
   } finally {
     if ( failed ) return
     if ( !isUnpin ) {
