@@ -24,4 +24,7 @@ const opts = {
 const sesion = new StringSession(SESSION)
 const client = new TelegramClient(sesion, parseInt(API_ID), API_HASH, opts)
 
+client.setLogLevel('info')
+client.setParseMode('html')
+
 module.exports = client
