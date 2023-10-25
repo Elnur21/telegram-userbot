@@ -46,12 +46,14 @@ const toggleSlowmode = async event => {
     60 * 60, // 1 hour
   ]
 
-  if ( arg !== 'off' && ( !validSeconds.includes(res) ) ) {
-    let intervals = validSeconds.map(sec => {
+  if ( arg !== 'off' && !validSeconds.includes(res) ) {
+    // make it readable.
+    let formatedIntervals = validSeconds.map(sec => {
       let timesT = sec >= 60 ? 'menit' : 'detik'
       let format = sec >= 60 ? sec / 60 : sec
+      let result = `<code>${ sec } = ${ format } ${ timesT }</code>`
 
-      return `<code>${ sec } = ${ format } ${ timesT }</code>`
+      return result
     })
 
     let text  = '<b>Bantuan :</b>\n'
@@ -59,7 +61,7 @@ const toggleSlowmode = async event => {
         text += '2. Aktifkan slowmode : .slow interval\n\n'
 
         text += '<b>Interval :</b>\n'
-        text += intervals.join('\n')
+        text += formatedIntervals.join('\n')
 
     let [ resText, entities ] = await _parseMessageText(client, text, 'html')
     editMessage.message = resText
