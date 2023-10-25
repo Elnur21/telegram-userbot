@@ -1,6 +1,7 @@
 const { Api } = require("telegram")
 const { _parseMessageText } = require("telegram/client/messageParse")
 const { NewMessage } = require("telegram/events")
+const { validation } = require('../../utils')
 
 const promoteOrDemote = async event => {
   const {
@@ -13,26 +14,11 @@ const promoteOrDemote = async event => {
     peer: message.peerId,
   })
 
-  if ( !message.isGroup || ( message.isGroup && !message.isChannel ) ) {
-    let text = 'cmd ini hanya bisa digunakan dalam supergroup'
-    editMessage.message = text
-    return await client.invoke(editMessage)
-  }
+  let isSupergroup = await validation.supergroup(client, message, editMessage)
+  if ( !isSupergroup ) return
 
-  let getParticipant = new Api.channels.GetParticipant({
-    channel: message.peerId,
-    participant: "me",
-  })
-
-  let {
-    participant: { adminRights }
-  } = await client.invoke(getParticipant)
-
-  if ( !adminRights ) {
-    let text = 'hanya admin group yang dapat menggunakan cmd ini'
-    editMessage.message = text
-    return await client.invoke(editMessage)
-  }
+  let isAdmin = await validation.admin(client, message.peerId, editMessage)
+  if ( !isAdmin ) return
 
   let [ _, action, participant, title ] = message.patternMatch
 
@@ -61,6 +47,10 @@ const promoteOrDemote = async event => {
     editMessage.entities = entities
 
     return await client.invoke(editMessage)
+  }
+
+  if ( !participant.startsWith('@') ) {
+    participant = '@' + participant
   }
 
   if ( isPromote && title.length > 16 ) {

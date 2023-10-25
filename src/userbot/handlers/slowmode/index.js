@@ -1,6 +1,7 @@
 const { Api } = require("telegram")
 const { _parseMessageText } = require("telegram/client/messageParse")
 const { NewMessage } = require("telegram/events")
+const { validation } = require('../../utils')
 
 const toggleSlowmode = async event => {
   let {
@@ -13,26 +14,11 @@ const toggleSlowmode = async event => {
     peer: message.peerId,
   })
 
-  if ( !message.isGroup || ( message.isGroup && !message.isChannel ) ) {
-    let text = 'command ini hanya bisa digunakan dalam supergroup'
-    editMessage.message = text
-    return await client.invoke(editMessage)
-  }
+  let isSupergroup = await validation.supergroup(client, message, editMessage)
+  if ( !isSupergroup ) return
 
-  let getParticipant = new Api.channels.GetParticipant({
-    participant: "me",
-    channel: message.peerId
-  })
-
-  let {
-    participant: { adminRights }
-  } = await client.invoke(getParticipant)
-
-  if ( !adminRights ) {
-    let text = 'hanya admin group yang dapat menggunakan command ini'
-    editMessage.message = text
-    return await client.invoke(editMessage)
-  }
+  let isAdmin = await validation.admin(client, message.peerId, editMessage)
+  if ( !isAdmin ) return
 
   let arg = message.patternMatch[1]
   let res = arg === 'off' ? 0 : parseInt(arg)
