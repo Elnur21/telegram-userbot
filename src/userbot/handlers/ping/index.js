@@ -1,4 +1,5 @@
 const { Api } = require("telegram")
+const { _parseMessageText } = require('telegram/client/messageParse')
 const { NewMessage } = require("telegram/events")
 
 const ping = async event => {
@@ -6,19 +7,44 @@ const ping = async event => {
     client,
     message } = event
 
-  let peer = message.peerId
-  let resp = 'pong!!'
+  let uptimeMs = Math.floor(process.uptime()) * 1000
+  let date = new Date(uptimeMs)
+  let segments = []
 
-  let method = new Api.messages.EditMessage({
-    peer,
+  let months  = date.getUTCMonth(),
+      days    = date.getUTCDate() - 1,
+      hours   = date.getUTCHours(),
+      minutes = date.getUTCMinutes(),
+      seconds = date.getUTCSeconds();
+
+  if ( months > 0  ) segments.push(months + ' bulan')
+  if ( days > 0    ) segments.push(days + ' hari')
+  if ( hours > 0   ) segments.push(hours + ' jam')
+  if ( minutes > 0 ) segments.push(minutes + ' menit')
+  if ( seconds > 0 ) segments.push(seconds + ' detik')
+
+  let calcPing = ( message.date * 1000 ) - new Date().getTime()
+      calcPing = calcPing.toString().replace('-', '')
+
+  let uptimeText = `<b>Uptime :</b> ${ segments.join(', ') }`
+  let pingText = `<b>Ping :</b> ${ calcPing }ms`
+
+  let unformatedText = `${ pingText }\n${ uptimeText }`
+  let [ text, entities ] = await _parseMessageText(client, unformatedText, 'html')
+
+  let editMessage = new Api.messages.EditMessage({
     id: message.id,
-    message: resp
+    entities,
+    message: text,
+    peer: message.peerId,
   })
 
   try {
-    await client.invoke(method)
+    await client.invoke(editMessage)
   } catch (err) {
-    console.error(err.message)
+    editMessage.entities = []
+    editMessage.message = err.message
+    await client.invoke(editMessage)
   }
 }
 
