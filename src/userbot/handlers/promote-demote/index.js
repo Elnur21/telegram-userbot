@@ -49,8 +49,11 @@ const promoteOrDemote = async event => {
     return await client.invoke(editMessage)
   }
 
-  if ( !participant.startsWith('@') ) {
-    participant = '@' + participant
+  if ( typeof participant === 'string' ) {
+    let expression = /^\d+$/
+    if ( !participant.match(expression) && !participant.startsWith('@') ) {
+      participant = '@' + participant
+    }
   }
 
   if ( isPromote && title.length > 16 ) {
