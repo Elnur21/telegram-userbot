@@ -82,8 +82,5 @@ const toFile = async event => {
 
 module.exports = {
   handler: toFile,
-  event: new NewMessage({
-    fromUsers: [ 'me' ],
-    pattern: /^\.tf$/
-  })
+  event: new NewMessage({ fromUsers: [ 'me' ], pattern: /^\.tf$/ })
 }

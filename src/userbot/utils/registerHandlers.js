@@ -18,25 +18,34 @@ const registerHandlers = async client => {
 
   for ( let handler of validHandlers ) {
     let hn = handler.split('/')
+    let moduleName = hn[ hn.length - 1 ]
 
     let file = await fs.readdir(handler)
         file = file.filter(name => name !== 'index.js' ? false : true )
 
     if ( !file?.length ) {
-      console.log(`[GAGAL] register ${ hn[hn.length - 1] }`)
+      console.log(`[GAGAL] register ${ moduleName }`)
       continue
     }
 
-    let absolute = path.join(handler, file[0])
-    let result = await import(absolute)
-
+    let result = await import(path.join(handler, file[0]))
     let exported = result.default
-    if ( !exported?.handler || !exported?.event ) {
-      console.log(`[GAGAL] register ${ hn[hn.length - 1] }`)
+
+    if ( exported?.[ Symbol.iterator ] ) {
+      for ( let expr of exported ) {
+        client.addEventHandler(expr.handler, expr.event)
+      }
+
+      console.log(`[SUKSES] register ${ moduleName }`)
       continue
     }
 
-    console.log(`[SUKSES] register ${ hn[hn.length - 1] }`)
+    if ( !exported?.handler || !exported?.event ) {
+      console.log(`[GAGAL] register ${ moduleName }`)
+      continue
+    }
+
+    console.log(`[SUKSES] register ${ moduleName }`)
     client.addEventHandler(exported.handler, exported.event)
   }
 }
