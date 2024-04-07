@@ -9,10 +9,6 @@ const {
   API_HASH,
   SESSION } = process.env
 
-if ( !API_ID || !API_HASH ) {
-  throw new Error('Missing userbot credentials!!')
-}
-
 const platform = os.platform()
 const released = os.release()
 

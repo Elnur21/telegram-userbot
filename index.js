@@ -1,9 +1,19 @@
 require('dotenv/config')
 
-const input = require('input')
-const userbot = require('./src/userbot')
+const {
+  API_HASH,
+  API_ID,
+  BOT_TOKEN } = process.env
 
+if ( !API_ID || !API_HASH || !BOT_TOKEN ) {
+  throw new Error('Missing required credentials!!')
+}
+
+const input = require('input')
 const { registerHandlers } = require('./src/userbot/utils')
+
+const bot = require('./src/bot')
+const userbot = require('./src/userbot')
 
 ;(async () => {
   await userbot.connect()
@@ -21,6 +31,20 @@ const { registerHandlers } = require('./src/userbot/utils')
     process.exit(1)
   }
 
+  let myInfo = await userbot.getMe()
+  userbot.me = myInfo.id
+
+  await userbot.getDialogs({})
   await registerHandlers(userbot)
+
+  bot.start({
+    drop_pending_updates: true,
+    allowed_updates: [
+      'inline_query',
+      'callback_query',
+      'chosen_inline_result',
+    ]
+  })
+
   console.log('Tosca Userbot is up and running!!!')
 })();
