@@ -2,8 +2,9 @@ const { Api } = require("telegram")
 const { NewMessage } = require("telegram/events")
 const { CustomFile } = require("telegram/client/uploads")
 
-const converter = require('../../utils/converter')
-const conversation = require('../../utils/conversation')
+const {
+  converter,
+  conversation } = require('../../utils')
 
 const toSticker = async event => {
   const {
@@ -241,17 +242,11 @@ const sendEmoji = async ( event, data ) => {
 
   let option = {
     onSuccess: data.isNew ? publishSticker : sendDone,
-    onTimeout: undefined,
+    onTimeout: () => console.log(`${ data.isNew ? 'publishSticker' : 'sendDone' } timeout`),
     data,
     pattern: data.isNew ? /(\/publish command\.)$/gm : /(\/done command\.)$/gm,
     timeoutMs: 5000,
     target: '@stickers'
-  }
-
-  if ( data.isNew ) {
-    option.onTimeout = () => console.log('publishSticker timeout')
-  } else {
-    option.onTimeout = () => console.log('sendDone timeout')
   }
 
   conversation(client, option)
