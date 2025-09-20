@@ -1,4 +1,4 @@
-const { validation } = require('../../utils')
+const { validation, languageManager } = require('../../utils')
 
 const { Api } = require("telegram")
 const { NewMessage } = require("telegram/events")
@@ -38,13 +38,9 @@ const deleteHistory = async event => {
         target = sender?.username ? '@' + sender.username : sender.firstName
   } else {
     if ( !participant ) {
-      let text  = '<b>Bantuan :</b>\n'
-          text += '1. reply ke pesan user target!\n'
-          text += '2. tambah username atau user_id target setelah command!\n\n'
-
-          text += '<b>Contoh :</b>\n'
-          text += '1. .destroy 1234567890\n'
-          text += '2. .destroy @username'
+      let userId = message.peerId?.userId || message.fromId?.userId
+      if (!userId) return
+      let text = languageManager.getText(userId, 'destroy_history.help')
 
       let [ resText, entities ] = await _parseMessageText(client, text, 'html')
       editMessage.message = resText
@@ -68,7 +64,9 @@ const deleteHistory = async event => {
 
     let { total } = await client.getMessages(message.peerId, options)
     if ( !total ) {
-      editMessage.message = `tidak menemukan pesan dari ${ participant } untuk dihapus!`
+      let userId = message.peerId?.userId || message.fromId?.userId
+      if (!userId) return
+      editMessage.message = languageManager.getText(userId, 'destroy_history.not_found', { user: participant })
       return await client.invoke(editMessage)
     }
   }
@@ -98,7 +96,9 @@ const deleteHistory = async event => {
 
   try {
     target = target ? target : participant
-    editMessage.message = `semua pesan dari ${ target } telah dihapus!`
+    let userId = message.peerId?.userId || message.fromId?.userId
+    if (!userId) return
+    editMessage.message = languageManager.getText(userId, 'destroy_history.success', { target })
 
     await client.invoke(editMessage)
   } catch (err) {

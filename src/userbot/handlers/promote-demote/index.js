@@ -1,7 +1,7 @@
 const { Api } = require("telegram")
 const { _parseMessageText } = require("telegram/client/messageParse")
 const { NewMessage } = require("telegram/events")
-const { validation } = require('../../utils')
+const { validation, languageManager } = require('../../utils')
 
 const promoteOrDemote = async event => {
   const {
@@ -34,13 +34,9 @@ const promoteOrDemote = async event => {
   }
 
   if ( !participant ) {
-    let text  = '<b>Bantuan :</b>\n'
-        text += '1. reply ke pesan user target!\n'
-        text += '2. tambah username atau user_id target setelah command!\n\n'
-
-        text += '<b>Contoh :</b>\n'
-        text += '1. .demote 1234567890\n'
-        text += '2. .promote @username custom title'
+    let userId = message.peerId?.userId || message.fromId?.userId
+    if (!userId) return
+    let text = languageManager.getText(userId, 'promote_demote.help')
 
     let [ resText, entities ] = await _parseMessageText(client, text, 'html')
     editMessage.message = resText
@@ -57,7 +53,9 @@ const promoteOrDemote = async event => {
   }
 
   if ( isPromote && title.length > 16 ) {
-    let text = 'panjang maksimal untuk custom title adalah 16 karakter!'
+    let userId = message.peerId?.userId || message.fromId?.userId
+    if (!userId) return
+    let text = languageManager.getText(userId, 'promote_demote.title_too_long')
     editMessage.message = text
 
     return await client.invoke(editMessage)
@@ -85,11 +83,12 @@ const promoteOrDemote = async event => {
     rank: isPromote ? title || 'Admin' : ''
   })
 
-  let actionText = action === 'promote'
-    ? 'dipromosikan menjadi admin'
-    : 'diturunkan dari posisi admin'
-
-  let successText = `${ target } telah ${ actionText }.`
+  let userId = message.peerId?.userId || message.fromId?.userId
+  if (!userId) return
+  let successText = action === 'promote'
+    ? languageManager.getText(userId, 'promote_demote.promoted', { target })
+    : languageManager.getText(userId, 'promote_demote.demoted', { target })
+  
   editMessage.message = successText
 
   try {

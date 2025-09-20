@@ -1,0 +1,68 @@
+{
+  "broadcast": {
+    "help": "1. Yayımlamaq istədiyiniz mesaja cavab verin!\n2. Birbaşa mesaj göndərin: .bc <mətn>",
+    "sending": "Broadcast {count} qrupa göndərilir...",
+    "completed": "Broadcast göndərildi."
+  },
+  "ping": {
+    "uptime": "İşləmə müddəti: {time}",
+    "ping": "Ping: {ping}ms"
+  },
+  "whisper": {
+    "group_only": "Whisper yalnız qrup söhbətində mövcuddur!",
+    "no_recipient": "Alıcının mesajına cavab verin və ya istifadəçi adını göstərin!",
+    "self_whisper": "Özünüzə whisper göndərə bilməzsiniz!"
+  },
+  "eval": {
+    "help": "Kömək:\n1. .eval dil kodu\n\nNümunələr:\n1. .eval javascript console.log('js')\n2. .eval python print('py')\n\nDillər:",
+    "result": "{language}:\n{code}\n\nNəticə:\n{output}"
+  },
+  "restrictions": {
+    "help": "Kömək:\n1. Hədəf istifadəçinin mesajına cavab verin!\n2. Komandanın sonuna istifadəçi adı və ya ID əlavə edin!\n\nNümunələr:\n1. .mute 1234567890\n2. .unmute @username\n3. .ban @username\n4. .unban 5234567890\n5. .kick @username",
+    "success": "{target} {action} edildi.",
+    "not_found_in_group": "${ target } was not found in the group!!",
+    "target_is_admin": "${action} yerinə yetirilmədi, çünki hədəf admindir!",
+    "kicked": "qrupdan çıxarıldı",
+    "ban_lifted": "ban statusu ləğv edildi",
+    "banned": "qrupdan ban olundu",
+    "can_speak": "yenidən danışa bilər",
+    "muted": "səssizə alındı"
+  },
+  "slowmode": {
+    "help": "Kömək:\n1. Slowmode söndürmək: .slow off\n2. Slowmode aktivləşdirmək: .slow interval\n\nIntervallar:",
+    "disabled": "slowmode söndürüldü",
+    "enabled": "slowmode {seconds} saniyə müddəti ilə aktivləşdirildi.",
+    "slowmode_disabled": "slowmode deaktiv edildi!",
+    "slowmode_enabled": "slowmode {res} saniyəlik müddətlə aktiv edildi!"
+  },
+  "promote_demote": {
+    "help": "Kömək:\n1. Hədəf istifadəçinin mesajına cavab verin!\n2. Komandanın sonuna istifadəçi adı və ya ID əlavə edin!\n\nNümunələr:\n1. .demote 1234567890\n2. .promote @username xüsusi başlıq",
+    "title_too_long": "Xüsusi başlıq üçün maksimum uzunluq 16 simvoldur!",
+    "promoted": "{target} admin vəzifəsinə yüksəldildi.",
+    "demoted": "{target} admin vəzifəsindən endirildi."
+  },
+  "pin_unpin": {
+    "no_reply": "Bərkitmək istədiyiniz mesaja cavab verin!!"
+  },
+  "destroy_history": {
+    "help": "Kömək:\n1. Hədəf istifadəçinin mesajına cavab verin!\n2. Komandanın sonuna istifadəçi adı və ya ID əlavə edin!\n\nNümunələr:\n1. .destroy 1234567890\n2. .destroy @username",
+    "not_found": "{user} istifadəçisindən silinəcək mesaj tapılmadı!",
+    "success": "{target} istifadəçisinin bütün mesajları silindi!"
+  },
+  "language": {
+    "current": "Cari dil: {lang}",
+    "available": "Mövcud dillər:",
+    "changed": "Dil dəyişdirildi: {lang}",
+    "invalid": "Yanlış dil! Mövcud dillər: {languages}"
+  },
+  "common": {
+    "months": "ay",
+    "days": "gün",
+    "hours": "saat",
+    "minutes": "dəqiqə",
+    "seconds": "saniyə",
+    "error": "Xəta: {message}",
+    "only_group_admins": "bu əmrdən yalnız qrup adminləri istifadə edə bilər",
+    "supergroup_only": "bu əmrdən yalnız superqruplarda istifadə etmək olar"
+  }
+}

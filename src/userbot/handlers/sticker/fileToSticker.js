@@ -123,7 +123,7 @@ const oldOrNew = async ( event, data ) => {
       : `${ sender.firstName }`
 
   let shortPackName = `TUB_${ senderId }_${ data.type === 'image' ? 'IMG' : 'VID' }_V`
-  let packName = `${ senderName } x Tosca || ${ data.type === 'image' ? 'IMG' : 'VID' } V`
+  let packName = `${ senderName } x || ${ data.type === 'image' ? 'IMG' : 'VID' } V`
 
   if ( message.message.includes('/newpack') ) {
     data = {

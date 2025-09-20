@@ -3,8 +3,9 @@ const { default: axios } = require("axios")
 const { Api } = require("telegram")
 const { _parseMessageText } = require('telegram/client/messageParse')
 const { NewMessage } = require("telegram/events")
+const { languageManager } = require('../../utils')
 
-const eval = async event => {
+const eval1 = async event => {
   const {
     client,
     message } = event
@@ -52,15 +53,10 @@ const eval = async event => {
       .map(itm => `<code>${ itm.language }</code>`)
       .join(', ')
 
-    let txt  = '<b>Bantuan :</b>\n'
-        txt += '1. .eval bahasa kode\n\n'
-
-        txt += '<b>Contoh :</b>\n'
-        txt += '1. .eval javascript console.log(\'js\')\n'
-        txt += '2. .eval python print(\'py\')\n\n'
-
-        txt += '<b>Bahasa :</b>\n'
-        txt += languageList
+    let userId = message.peerId?.userId || message.fromId?.userId
+    if (!userId) return
+    let txt = languageManager.getText(userId, 'eval.help')
+    txt += '\n' + languageList
 
     let [ text, entities ] = await _parseMessageText(client, txt, 'html')
     editMessage.message = text
@@ -87,16 +83,14 @@ const eval = async event => {
 
   let result = res.run.stdout || res.run.stderr
   let formatedLang = res.language.charAt(0).toUpperCase() + res.language.slice(1)
+  let userId = message.peerId?.userId || message.fromId?.userId
+  if (!userId) return
 
-  let resultText  = `<b>${ formatedLang } :</b>\n`
-      resultText += '<pre>'
-      resultText += `<code class="language-${ res.language }">${ query }</code>`
-      resultText += '</pre>\n\n'
-
-      resultText += `<b>Output :</b>\n`
-      resultText += '<pre>'
-      resultText += `<code class="language-shell">${ result }</code>`
-      resultText += '</pre>'
+  let resultText = languageManager.getText(userId, 'eval.result', {
+    language: formatedLang,
+    code: `<pre><code class="language-${ res.language }">${ query }</code></pre>`,
+    output: `<pre><code class="language-shell">${ result }</code></pre>`
+  })
 
   let [
     text,
@@ -115,7 +109,7 @@ const eval = async event => {
 }
 
 module.exports = {
-  handler: eval,
+  handler: eval1,
   event: new NewMessage({
     fromUsers: [ 'me' ],
     pattern: /^\.eval\s*(\w*)\s*([\w\W]*)/

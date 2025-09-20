@@ -1,5 +1,6 @@
 const { Api } = require("telegram")
 const { NewMessage } = require("telegram/events")
+const { languageManager } = require('../../utils')
 
 const broadcast = async event => {
   const {
@@ -19,8 +20,9 @@ const broadcast = async event => {
     : message.message?.replace(/\.bc\s*/, '')
 
   if ( !messageToSend ) {
-    let text  = '1. reply ke pesan yang akan di broadcast!\n'
-        text += '2. broadcast pesan langsung dengan mengirim : .bc <text>'
+    let userId = message.peerId?.userId || message.fromId?.userId
+    if (!userId) return
+    let text = languageManager.getText(userId, 'broadcast.help')
 
     method.message = text
     return await client.invoke(method)
@@ -37,7 +39,9 @@ const broadcast = async event => {
   })
 
   try {
-    method.message = `Mengirim broadcast ke ${ results.length } grup...`
+    let userId = message.peerId?.userId || message.fromId?.userId
+    if (!userId) return
+    method.message = languageManager.getText(userId, 'broadcast.sending', { count: results.length })
     await client.invoke(method)
   } catch (err) {
     return console.error(err.message)
@@ -56,7 +60,9 @@ const broadcast = async event => {
     }
 
     try {
-      method.message = 'Broadcast telah terkirim.'
+      let userId = message.peerId?.userId || message.fromId?.userId
+      if (!userId) return
+      method.message = languageManager.getText(userId, 'broadcast.completed')
       await client.invoke(method)
     } catch (err) {
       console.error(err)

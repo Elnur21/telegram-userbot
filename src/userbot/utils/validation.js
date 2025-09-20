@@ -1,4 +1,5 @@
 const { Api } = require("telegram")
+const languageManager = require("./language")
 
 const admin = async ( client, peer, editMessage ) => {
   let getParticipant = new Api.channels.GetParticipant({
@@ -9,7 +10,7 @@ const admin = async ( client, peer, editMessage ) => {
   let { participant: { adminRights } } = await client.invoke(getParticipant)
   if ( adminRights ) return true
 
-  let text = 'hanya admin group yang dapat menggunakan command ini'
+  let text = languageManager.getText(peer.userId, 'only_group_admins')
   editMessage.message = text
 
   await client.invoke(editMessage)
@@ -21,7 +22,7 @@ const supergroup = async ( client, message, editMessage ) => {
     return true
   }
 
-  let text = 'command ini hanya bisa digunakan dalam supergroup'
+  let text = languageManager.getText(message.peerId.userId, 'supergroup_only')
   editMessage.message = text
 
   await client.invoke(editMessage)

@@ -1,0 +1,68 @@
+{
+  "broadcast": {
+    "help": "1. Reply to the message you want to broadcast!\n2. Broadcast message directly by sending: .bc <text>",
+    "sending": "Sending broadcast to {count} groups...",
+    "completed": "Broadcast has been sent."
+  },
+  "ping": {
+    "uptime": "Uptime: {time}",
+    "ping": "Ping: {ping}ms"
+  },
+  "whisper": {
+    "group_only": "Whisper only available inside a group chat!",
+    "no_recipient": "Reply to recipient message or provide his/her username!",
+    "self_whisper": "You cannot send whisper to yourself!"
+  },
+  "eval": {
+    "help": "Help:\n1. .eval language code\n\nExamples:\n1. .eval javascript console.log('js')\n2. .eval python print('py')\n\nLanguages:",
+    "result": "{language}:\n{code}\n\nOutput:\n{output}"
+  },
+  "restrictions": {
+    "help": "Help:\n1. Reply to target user's message!\n2. Add username or user_id after command!\n\nExamples:\n1. .mute 1234567890\n2. .unmute @username\n3. .ban @username\n4. .unban 5234567890\n5. .kick @username",
+    "success": "{target} has been {action}.",
+    "not_found_in_group": "${ target } was not found in the group!!",
+    "target_is_admin": "failed to perform ${action}, because the target is an admin!",
+    "kicked": "has been kicked from the group",
+    "ban_lifted": "ban status has been lifted",
+    "banned": "has been banned from the group",
+    "can_speak": "can speak again",
+    "muted": "has been muted"
+  },
+  "slowmode": {
+    "help": "Help:\n1. Turn off slowmode: .slow off\n2. Enable slowmode: .slow interval\n\nIntervals:",
+    "disabled": "slowmode has been disabled",
+    "enabled": "slowmode has been enabled with duration {seconds} seconds.",
+    "slowmode_disabled": "slowmode has been disabled!",
+    "slowmode_enabled": "slowmode has been enabled with a duration of {res} seconds!"
+  },
+  "promote_demote": {
+    "help": "Help:\n1. Reply to target user's message!\n2. Add username or user_id after command!\n\nExamples:\n1. .demote 1234567890\n2. .promote @username custom title",
+    "title_too_long": "Maximum length for custom title is 16 characters!",
+    "promoted": "{target} has been promoted to admin.",
+    "demoted": "{target} has been demoted from admin position."
+  },
+  "pin_unpin": {
+    "no_reply": "Reply to the message you want to pin!!"
+  },
+  "destroy_history": {
+    "help": "Help:\n1. Reply to target user's message!\n2. Add username or user_id after command!\n\nExamples:\n1. .destroy 1234567890\n2. .destroy @username",
+    "not_found": "No messages found from {user} to delete!",
+    "success": "All messages from {target} have been deleted!"
+  },
+  "language": {
+    "current": "Current language: {lang}",
+    "available": "Available languages:",
+    "changed": "Language changed to: {lang}",
+    "invalid": "Invalid language! Available languages: {languages}"
+  },
+  "common": {
+    "months": "months",
+    "days": "days",
+    "hours": "hours",
+    "minutes": "minutes",
+    "seconds": "seconds",
+    "error": "Error: {message}",
+    "only_group_admins": "only group admins can use this command",
+    "supergroup_only": "this command can only be used in supergroups"
+  }
+}

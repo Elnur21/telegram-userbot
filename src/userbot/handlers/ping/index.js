@@ -1,8 +1,10 @@
 const { Api } = require("telegram")
 const { _parseMessageText } = require('telegram/client/messageParse')
 const { NewMessage } = require("telegram/events")
+const { languageManager } = require('../../utils')
 
 const ping = async event => {
+  
   const {
     client,
     message } = event
@@ -17,17 +19,21 @@ const ping = async event => {
       minutes = date.getUTCMinutes(),
       seconds = date.getUTCSeconds();
 
-  if ( months > 0  ) segments.push(months + ' bulan')
-  if ( days > 0    ) segments.push(days + ' hari')
-  if ( hours > 0   ) segments.push(hours + ' jam')
-  if ( minutes > 0 ) segments.push(minutes + ' menit')
-  if ( seconds > 0 ) segments.push(seconds + ' detik')
+  let userId = message.peerId?.userId || message.fromId?.userId
+  
+  if (!userId) return
+  
+  if ( months > 0  ) segments.push(months + ' ' + languageManager.getText(userId, 'common.months'))
+  if ( days > 0    ) segments.push(days + ' ' + languageManager.getText(userId, 'common.days'))
+  if ( hours > 0   ) segments.push(hours + ' ' + languageManager.getText(userId, 'common.hours'))
+  if ( minutes > 0 ) segments.push(minutes + ' ' + languageManager.getText(userId, 'common.minutes'))
+  if ( seconds > 0 ) segments.push(seconds + ' ' + languageManager.getText(userId, 'common.seconds'))
 
   let calcPing = ( message.date * 1000 ) - new Date().getTime()
       calcPing = calcPing.toString().replace('-', '')
 
-  let uptimeText = `<b>Uptime :</b> ${ segments.join(', ') }`
-  let pingText = `<b>Ping :</b> ${ calcPing }ms`
+  let uptimeText = languageManager.getText(userId, 'ping.uptime', { time: segments.join(', ') })
+  let pingText = languageManager.getText(userId, 'ping.ping', { ping: calcPing })
 
   let unformatedText = `${ pingText }\n${ uptimeText }`
   let [ text, entities ] = await _parseMessageText(client, unformatedText, 'html')

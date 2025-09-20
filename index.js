@@ -46,5 +46,5 @@ const userbot = require('./src/userbot')
     ]
   })
 
-  console.log('Tosca Userbot is up and running!!!')
+  console.log('Userbot is up and running!!!')
 })();

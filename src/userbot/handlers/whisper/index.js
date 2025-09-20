@@ -2,6 +2,7 @@ const bot = require('../../../bot')
 
 const { Api } = require("telegram")
 const { NewMessage } = require("telegram/events")
+const { languageManager } = require('../../utils')
 
 const whisper = async event => {
   let {
@@ -24,7 +25,9 @@ const whisper = async event => {
       : false
 
   if ( !isFromGroups ) {
-    let text = 'Whisper only available inside a group chat!'
+    let userId = message.peerId?.userId || message.fromId?.userId
+    if (!userId) return
+    let text = languageManager.getText(userId, 'whisper.group_only')
     sendMessage.message = text
     return await client.invoke(sendMessage)
   }
@@ -44,7 +47,9 @@ const whisper = async event => {
   }
 
   if ( !toId ) {
-    let text = 'Reply to recipient message or provide his/her username!'
+    let userId = message.peerId?.userId || message.fromId?.userId
+    if (!userId) return
+    let text = languageManager.getText(userId, 'whisper.no_recipient')
     sendMessage.message = text
     return await client.invoke(sendMessage)
   }
@@ -60,11 +65,14 @@ const whisper = async event => {
     return await client.invoke(sendMessage)
   }
 
-  let fromId = parseInt(message.fromId.userId)
+  let fromId = parseInt(message.fromId?.userId)
+  if (!fromId) return
   let target = parseInt(userInfo.id)
 
   if ( target === fromId ) {
-    let text = 'You cannot send whisper to yourself!'
+    let userId = message.peerId?.userId || message.fromId?.userId
+    if (!userId) return
+    let text = languageManager.getText(userId, 'whisper.self_whisper')
     sendMessage.message = text
     return await client.invoke(sendMessage)
   }

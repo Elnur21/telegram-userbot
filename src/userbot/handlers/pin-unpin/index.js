@@ -1,6 +1,6 @@
 const { Api } = require("telegram")
 const { NewMessage } = require("telegram/events")
-const { destroyServiceMessage } = require('../../utils')
+const { destroyServiceMessage, languageManager } = require('../../utils')
 
 const pinOrUnpin = async event => {
   const {
@@ -10,10 +10,12 @@ const pinOrUnpin = async event => {
   let peer = message.peerId
 
   if ( !message.replyTo ) {
+    let userId = message.peerId?.userId || message.fromId?.userId
+    if (!userId) return
     let method = new Api.messages.EditMessage({
       peer,
       id: message.id,
-      message: 'Reply pada pesan yang akan di pin!!'
+      message: languageManager.getText(userId, 'pin_unpin.no_reply')
     })
     return await client.invoke(method)
   }
