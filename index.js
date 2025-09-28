@@ -16,18 +16,21 @@ const { registerHandlers } = require('./src/userbot/utils')
 const bot = require('./src/bot')
 const userbot = require('./src/userbot')
 
-// --- Add Express API ---
-const express = require('express')
-const app = express()
+// Avoid running local Express server on Vercel
+const isVercel = !!process.env.VERCEL
 
-app.get('/', (req, res) => {
-  res.send('<h1>Helo</h1>')
-})
+if (!isVercel) {
+  const express = require('express')
+  const app = express()
 
-app.listen(5000, () => {
-  console.log('API running on http://localhost:5000')
-})
-// ------------------------
+  app.get('/', (req, res) => {
+    res.send('<h1>Helo</h1>')
+  })
+
+  app.listen(5000, () => {
+    console.log('API running on http://localhost:5000')
+  })
+}
 
 ;(async () => {
   await userbot.connect()
@@ -51,7 +54,8 @@ app.listen(5000, () => {
   await userbot.getDialogs({})
   await registerHandlers(userbot)
 
-  bot.start({
+  // Only start long-polling locally; Vercel uses webhook via /api/telegram
+  if (!isVercel) bot.start({
     drop_pending_updates: true,
     allowed_updates: [
       'inline_query',
