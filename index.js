@@ -3,9 +3,10 @@ require('dotenv/config')
 const {
   API_HASH,
   API_ID,
-  BOT_TOKEN } = process.env
+  BOT_TOKEN
+} = process.env
 
-if ( !API_ID || !API_HASH || !BOT_TOKEN ) {
+if (!API_ID || !API_HASH || !BOT_TOKEN) {
   throw new Error('Missing required credentials!!')
 }
 
@@ -15,11 +16,24 @@ const { registerHandlers } = require('./src/userbot/utils')
 const bot = require('./src/bot')
 const userbot = require('./src/userbot')
 
+// --- Add Express API ---
+const express = require('express')
+const app = express()
+
+app.get('/', (req, res) => {
+  res.send('<h1>Helo</h1>')
+})
+
+app.listen(5000, () => {
+  console.log('API running on http://localhost:5000')
+})
+// ------------------------
+
 ;(async () => {
   await userbot.connect()
   const isAuthorized = await userbot.isUserAuthorized()
 
-  if ( !isAuthorized ) {
+  if (!isAuthorized) {
     await userbot.start({
       phoneNumber: async () => await input.text("Nomor Ponsel (+62) : "),
       password: async () => await input.text("Kata Sandi : "),
