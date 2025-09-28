@@ -9,6 +9,7 @@
   },
   "scripts": {
     "start": "node index.js",
+    "build": "node build.js",
     "dev": "nodemon index.js"
   },
   "keywords": [],
